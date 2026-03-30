@@ -1,79 +1,72 @@
-import users from '../data/users.data';
+import users from '../data/users.data.js';
 
-const get = (userId) => users.find((user) => user.id === userId);
+// Get single user
+const get = (userId) => {
+return users.find((user) => user.id === userId);
+};
 
-const getAll = () => users;
+// Get all users
+const getAll = () => {
+return users;
+};
 
-/**
- * Update a user from its ID.
- *
- * @param {integer} userId
- * @param {Object} newDetails
- * @returns {boolean|*}
- */
+// Update user
 const update = (userId, newDetails) => {
-    let existingUser = null;
-    let userIndex;
+let userIndex = users.findIndex((user) => user.id === userId);
 
-    users.map((user, index) => {
-        if (user.id === userId) {
-            existingUser = user;
-            userIndex = index;
-        }
-    });
-
-    if (!existingUser) {
-        return false;
-    }
-
-    const updatedUser = {
-        ...existingUser,
-        ...newDetails
-    };
-
-    users.splice(userIndex, 1, updatedUser);
-
-    return updatedUser;
+```
+if (userIndex === -1) {
+    return false;
 }
 
-/**
- * Insert a user.
- *
- * @param {Object} details
- * @returns {*&{id: number}}
- */
+const updatedUser = {
+    ...users[userIndex],
+    ...newDetails
+};
+
+users.splice(userIndex, 1, updatedUser);
+
+return updatedUser;
+```
+
+};
+
+// Insert user
 const insert = (details) => {
-    const newUser = {
-        id: users.length + 1,
-        ...details
-    };
+const newUser = {
+id: users.length + 1,
+...details
+};
 
-    users.push(newUser);
+```
+users.push(newUser);
 
-    return newUser;
-}
+return newUser;
+```
 
-/**
- * Remove a user from its ID.
- *
- * @param {integer} userId
- * @returns {*}
- */
+};
+
+// Remove user
 const remove = (userId) => {
-    const deleteUser = (user, index) => {
-        if (user?.id === userId) {
-            // Remove the array element of the found user
-            users.splice(index, 1);
-        }
-    };
+const userIndex = users.findIndex((user) => user.id === userId);
 
-    return users.find(deleteUser)
+```
+if (userIndex === -1) {
+    return false;
 }
+
+const deletedUser = users[userIndex];
+users.splice(userIndex, 1);
+
+return deletedUser;
+```
+
+};
 
 export default {
-    get,
-    getAll,
-    update,
-    insert,
-    remove,
-}
+get,
+getAll,
+update,
+insert,
+remove,
+};
