@@ -10,36 +10,58 @@ import userRoutes from './user.routes.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
+// Trust proxy (important for Render / cloud platforms)
+app.set('trust proxy', 1);
+
+// Rate limiter
 const rateLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 100,
+windowMs: 60 * 1000,
+max: 100,
+message: {
+status: 429,
+message: "Too many requests, please try again later."
+}
 });
 
+// Middlewares
 app.use(compression());
 app.use(express.json());
 app.use(helmet());
 
+// CORS
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "*",
-    credentials: true
+origin: process.env.FRONTEND_URL || "*",
+credentials: true
 }));
 
-app.use('/v1', rateLimiter);
-
+// Health check route (important for deployment platforms)
 app.get('/', (req, res) => {
-    res.send('API is running 🚀');
+res.status(200).send('API is running 🚀');
 });
 
+// Apply rate limiter only to API routes
+app.use('/v1', rateLimiter);
+
+// Routes
 app.use('/v1', mainRoutes);
 app.use('/v1/user', userRoutes);
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({
-        message: "Something went wrong!"
-    });
+// 404 handler
+app.use((req, res) => {
+res.status(404).json({
+message: "Route not found"
+});
 });
 
+// Global error handler
+app.use((err, req, res, next) => {
+console.error("Error:", err.message);
+res.status(500).json({
+message: "Internal Server Error"
+});
+});
+
+// Start server
 app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+console.log(`Server running on port ${port}`);
 });
