@@ -1,50 +1,49 @@
-import userDao from '../models/persistence/user.dao';
+import userDao from '../models/persistence/user.dao.js';
 
 /**
- * Get all users.
- *
- * @returns {[]}
- */
-const getAllUsers = () => userDao.getAll();
+
+* Get all users.
+  */
+  const getAllUsers = () => {
+  return userDao.getAll();
+  };
 
 /**
- * Get a user from its ID.
- *
- * @param {integer} userId
- * @returns {T}
- */
-const getUser = (userId) => userDao.get(userId);
+
+* Get a user by ID.
+  */
+  const getUser = (userId) => {
+  return userDao.get(userId);
+  };
 
 /**
- * Update a user.
- *
- * @param {integer} userId
- * @param details
- * @returns {boolean|*}
- */
-const updateUser = (userId, details) => userDao.update(userId, details);
+
+* Update a user.
+  */
+  const updateUser = (userId, details) => {
+  return userDao.update(userId, details);
+  };
 
 /**
- * Add a user.
- *
- * @param {Object} details
- * @returns {*}
- */
-const addUser = (details) => userDao.insert(details);
+
+* Add a user.
+  */
+  const addUser = (details) => {
+  return userDao.insert(details);
+  };
 
 /**
- * Remove a user.
- *
- * @param {integer} userId
- * @returns {*}
- */
-const removeUser = (userId) => userDao.remove(userId);
+
+* Remove a user.
+  */
+  const removeUser = (userId) => {
+  return userDao.remove(userId);
+  };
 
 export default {
-    getUser,
-    getAllUsers,
-    updateUser,
-    addUser,
-    removeUser
-}
-
+getUser,
+getAllUsers,
+updateUser,
+addUser,
+removeUser
+};
