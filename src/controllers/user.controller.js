@@ -1,139 +1,122 @@
-import {StatusCodes} from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import pino from 'pino';
+import userService from '../services/user.service.js';
 
 const logger = pino();
 
-import userService from '../services/user.service';
-
 const STATUS = {
-    success: true,
-    failure: false
+success: true,
+failure: false
 };
 
-/**
- * @param req
- * @param res
- * @returns {*}
- */
+// Get all users
 const getAllUsers = (req, res) => {
-    const users = userService.getAllUsers();
+const users = userService.getAllUsers();
 
-    if (users.length) {
-        return res.status(StatusCodes.OK).send(users);
-    }
+```
+if (users && users.length) {
+    return res.status(StatusCodes.OK).send(users);
+}
 
-    return res.status(StatusCodes.NOT_FOUND).send({
-        status: STATUS.failure,
-        message: 'No users found.',
-    });
+return res.status(StatusCodes.NOT_FOUND).send({
+    status: STATUS.failure,
+    message: 'No users found.',
+});
+```
+
 };
 
-/**
- * Retrieve a user
- *.
- * @param req
- * @param res
- * @returns {*}
- */
+// Get single user
 const getUser = (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const user = userService.getUser(id);
+const id = parseInt(req.params.id, 10);
+const user = userService.getUser(id);
 
-    if (user) {
-        logger.info(`Retrieving user ID ${id} `);
+```
+if (user) {
+    logger.info(`Retrieving user ID ${id}`);
 
-        return res.status(StatusCodes.OK).send(user)
-    }
+    return res.status(StatusCodes.OK).send(user);
+}
 
-    return res.status(StatusCodes.NOT_FOUND).send({
-        status: STATUS.failure,
-        message: `User ${id} is not found.`,
-    });
+return res.status(StatusCodes.NOT_FOUND).send({
+    status: STATUS.failure,
+    message: `User ${id} is not found.`,
+});
+```
+
 };
 
-/**
- * Add a user.
- *
- * @param req
- * @param res
- * @returns {*}
- */
+// Add user
 const addUser = (req, res) => {
-    const {body: user} = req;
+const user = req.body;
 
-    const addedUser = userService.addUser(user);
+```
+const addedUser = userService.addUser(user);
 
-    logger.info('Creating a user');
+logger.info('Creating a user');
 
-    return res.status(StatusCodes.CREATED).send({
-        status: STATUS.success,
-        user: addedUser,
-    });
+return res.status(StatusCodes.CREATED).send({
+    status: STATUS.success,
+    user: addedUser,
+});
+```
+
 };
 
-/**
- * Update a user.
- *
- * @param req
- * @param res
- * @returns {*}
- */
+// Update user
 const updateUser = (req, res) => {
-    const {body: user} = req;
+const user = req.body;
+const id = parseInt(req.params.id, 10);
 
-    const id = parseInt(req.params.id, 10);
+```
+const updatedUser = userService.updateUser(id, user);
 
-    const updatedUser = userService.updateUser(id, user);
+if (updatedUser) {
+    logger.info(`Updating user ID ${id}`);
 
-    if (updatedUser) {
-        logger.info(`Updating user ID ${id}`);
+    return res.status(StatusCodes.OK).send({
+        status: STATUS.success,
+        user: updatedUser,
+    });
+}
 
-        return res.status(StatusCodes.OK).send({
-            status: STATUS.success,
-            user: updatedUser,
-        });
-    } else {
-        return res.status(StatusCodes.NOT_FOUND).send({
-            status: STATUS.failure,
-            message: `User ${id} is not found.`,
-        });
-    }
+return res.status(StatusCodes.NOT_FOUND).send({
+    status: STATUS.failure,
+    message: `User ${id} is not found.`,
+});
+```
+
 };
 
-/**
- * Remove a user.
- *
- * @param req
- * @param res
- * @returns {*}
- */
+// Delete user
 const removeUser = (req, res) => {
-    const { params } = req;
+const id = parseInt(req.params.id, 10);
+const user = userService.getUser(id);
 
-    const id = parseInt(params.id);
-    const user = userService.getUser(id);
-    if (user) {
-        userService.removeUser(id);
+```
+if (user) {
+    userService.removeUser(id);
 
-        logger.info(`Removing user ID ${id}`);
+    logger.info(`Removing user ID ${id}`);
 
-        return res.status(StatusCodes.OK).send({
-            status: STATUS.success,
-            message: `User ${id} has been deleted.`,
-        });
-    } else {
-        return res.status(StatusCodes.NOT_FOUND).send({
-            status: STATUS.failure,
-            message: `User ${id} hasn't been found.`,
-        });
-    }
+    return res.status(StatusCodes.OK).send({
+        status: STATUS.success,
+        message: `User ${id} has been deleted.`,
+    });
+}
+
+return res.status(StatusCodes.NOT_FOUND).send({
+    status: STATUS.failure,
+    message: `User ${id} hasn't been found.`,
+});
+```
+
 };
-
 
 export default {
-    getAllUsers,
-    getUser,
-    addUser,
-    updateUser,
-    removeUser
-}
+getAllUsers,
+getUser,
+addUser,
+updateUser,
+removeUser
+};
