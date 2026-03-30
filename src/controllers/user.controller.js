@@ -15,10 +15,10 @@ const users = userService.getAllUsers();
 
 ```
 if (users && users.length) {
-    return res.status(StatusCodes.OK).send(users);
+    return res.status(StatusCodes.OK).json(users);
 }
 
-return res.status(StatusCodes.NOT_FOUND).send({
+return res.status(StatusCodes.NOT_FOUND).json({
     status: STATUS.failure,
     message: 'No users found.',
 });
@@ -34,11 +34,10 @@ const user = userService.getUser(id);
 ```
 if (user) {
     logger.info(`Retrieving user ID ${id}`);
-
-    return res.status(StatusCodes.OK).send(user);
+    return res.status(StatusCodes.OK).json(user);
 }
 
-return res.status(StatusCodes.NOT_FOUND).send({
+return res.status(StatusCodes.NOT_FOUND).json({
     status: STATUS.failure,
     message: `User ${id} is not found.`,
 });
@@ -49,13 +48,12 @@ return res.status(StatusCodes.NOT_FOUND).send({
 // Add user
 const addUser = (req, res) => {
 const user = req.body;
-
-```
 const addedUser = userService.addUser(user);
 
+```
 logger.info('Creating a user');
 
-return res.status(StatusCodes.CREATED).send({
+return res.status(StatusCodes.CREATED).json({
     status: STATUS.success,
     user: addedUser,
 });
@@ -73,14 +71,13 @@ const updatedUser = userService.updateUser(id, user);
 
 if (updatedUser) {
     logger.info(`Updating user ID ${id}`);
-
-    return res.status(StatusCodes.OK).send({
+    return res.status(StatusCodes.OK).json({
         status: STATUS.success,
         user: updatedUser,
     });
 }
 
-return res.status(StatusCodes.NOT_FOUND).send({
+return res.status(StatusCodes.NOT_FOUND).json({
     status: STATUS.failure,
     message: `User ${id} is not found.`,
 });
@@ -99,13 +96,13 @@ if (user) {
 
     logger.info(`Removing user ID ${id}`);
 
-    return res.status(StatusCodes.OK).send({
+    return res.status(StatusCodes.OK).json({
         status: STATUS.success,
         message: `User ${id} has been deleted.`,
     });
 }
 
-return res.status(StatusCodes.NOT_FOUND).send({
+return res.status(StatusCodes.NOT_FOUND).json({
     status: STATUS.failure,
     message: `User ${id} hasn't been found.`,
 });
